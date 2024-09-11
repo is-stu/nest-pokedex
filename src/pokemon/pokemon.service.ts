@@ -1,12 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
+import { Model } from 'mongoose';
+import { Pokemon } from './entities/pokemon.entity';
+import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class PokemonService {
-  create(createPokemonDto: CreatePokemonDto) {
+  constructor(
+    @InjectModel(Pokemon.name) // Inject the model for mongodb
+    private readonly pokemonModel: Model<Pokemon>,
+  ) {}
+
+  async create(createPokemonDto: CreatePokemonDto) {
     createPokemonDto.name = createPokemonDto.name.toLowerCase();
-    return createPokemonDto;
+
+    try {
+      const pokemon = await this.pokemonModel.create(createPokemonDto);
+      return pokemon;
+    } catch (error) {
+      console.log('error ', error);
+      if (error.code === 11000) {
+        throw new ConflictException(
+          `This pokemon ${JSON.stringify(error.keyValue)} already exists`,
+        );
+      }
+      throw new InternalServerErrorException(`Cannot create pokemon`);
+    }
   }
 
   findAll() {
