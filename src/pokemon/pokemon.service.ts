@@ -90,6 +90,16 @@ export class PokemonService {
     return;
   }
 
+  async deleteAllPokemons() {
+    await this.pokemonModel.deleteMany({});
+    return;
+  }
+
+  async createPokemonsBySeed(pokemons: CreatePokemonDto[]) {
+    await this.pokemonModel.insertMany(pokemons);
+    return;
+  }
+
   private handleExceptions(error: any) {
     console.log('error ', error);
     if (error.code === 11000) {

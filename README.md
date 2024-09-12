@@ -18,3 +18,15 @@ pnpm install
 docker-compose up -d
 ```
 
+4. Run the application
+
+```bash
+pnpm run start:dev
+```
+
+5. Exectue the seed
+
+```bash
+http://localhost:3000/seed
+```
+

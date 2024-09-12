@@ -14,19 +14,20 @@ export class SeedService {
   ) {}
 
   async executeSeed() {
+    const pokemonsToInsert: CreatePokemonDto[] = [];
+    await this.pokemonService.deleteAllPokemons();
+
     const { data } = await this.axios.get<PokeResponse>(
-      'https://pokeapi.co/api/v2/pokemon?limit=10',
+      'https://pokeapi.co/api/v2/pokemon?limit=650',
     );
 
-    data.results.forEach(async ({ name, url }) => {
+    data.results.forEach(({ name, url }) => {
       const segments = url.split('/');
       const no = +segments[segments.length - 2];
-      const pokemonToInsert: CreatePokemonDto = {
-        name,
-        no,
-      };
-      await this.pokemonService.create(pokemonToInsert);
+      pokemonsToInsert.push({ name, no });
     });
-    return data.results;
+
+    await this.pokemonService.createPokemonsBySeed(pokemonsToInsert);
+    return `Seed successfully executed`;
   }
 }
