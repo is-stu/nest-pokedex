@@ -5,6 +5,7 @@
 # nest-pokedex
 
 ## Local Running
+
 1. Git clone this repo
 2. Execute the following commands
 
@@ -24,9 +25,14 @@ docker-compose up -d
 pnpm run start:dev
 ```
 
-5. Exectue the seed
+5. Configure the environment variables
+
+```bash
+cp .env.template .env
+```
+
+6. Exectue the seed
 
 ```bash
 http://localhost:3000/seed
 ```
-
