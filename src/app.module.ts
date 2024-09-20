@@ -21,7 +21,9 @@ import { JoiValidationSchema } from './config/joi.validation';
       exclude: ['/api*'],
       renderPath: '/',
     }),
-    MongooseModule.forRoot('mongodb://localhost:27017/nest-pokedex'),
+    MongooseModule.forRoot(process.env.MONGODB, {
+      dbName: 'nest-pokedex',
+    }),
     PokemonModule,
     CommonModule,
     SeedModule,
